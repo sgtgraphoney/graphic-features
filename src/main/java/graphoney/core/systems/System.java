@@ -13,13 +13,34 @@ public abstract class System {
 
     /**
      * Constructs a new system with specified parameters.
+     *
      * @param name the name of the system.
-     * @param action the action that must be performed cyclically on each frame.
      */
-    public System(String name, FrameAction action) {
+    public System(String name) {
         this.name = name;
-        thread = new SystemThread(action);
+        thread = new SystemThread(this::initialize, this::run, this::destroy);
     }
+
+    /**
+     * Initializes the system.
+     *
+     * @throws InterruptedException if interrupted while waiting.
+     */
+    protected abstract void initialize() throws InterruptedException;
+
+    /**
+     * The main action that is performed cyclically on each frame.
+     *
+     * @throws InterruptedException if interrupted while waiting.
+     */
+    protected abstract void run() throws InterruptedException;
+
+    /**
+     * Destroys the system.
+     *
+     * @throws InterruptedException if interrupted while waiting.
+     */
+    protected abstract void destroy() throws InterruptedException;
 
     /**
      * Starts the thread of the system.
@@ -57,6 +78,7 @@ public abstract class System {
 
     /**
      * Returns the name of the current system.
+     *
      * @return the name of the system.
      */
     public String getName() {
@@ -65,6 +87,7 @@ public abstract class System {
 
     /**
      * Returns the boolean value that indicates whether the system runs.
+     *
      * @return the value of the <tt>active</tt> flag.
      */
     public boolean isActive() {
@@ -73,6 +96,7 @@ public abstract class System {
 
     /**
      * Returns a boolean value that indicates whether the system is terminated and the thread is not alive.
+     *
      * @return a boolean value that indicates whether the system is terminated.
      */
     public boolean isTerminated() {
@@ -80,8 +104,20 @@ public abstract class System {
     }
 
     /**
+     * Waits for system shutdown.
+     */
+    public void waitForTermination() {
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            Logger.printError("Waiting for termination of system '" + name + "' interrupted.");
+        }
+    }
+
+    /**
      * Transfers any data to the current system.
      * This is the only way to transfer data from one system to another.
+     *
      * @param data data that is required for the system.
      * @throws IllegalArgumentException if the data has illegal type for the current system.
      */

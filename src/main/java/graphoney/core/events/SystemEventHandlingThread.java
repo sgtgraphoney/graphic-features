@@ -23,22 +23,25 @@ public class SystemEventHandlingThread extends Thread {
     public void run() {
         while (!isInterrupted()) {
 
-            SystemEvent event;
+            SystemEvent event = null;
             try {
                 event = eventQueue.take();
             } catch (InterruptedException e) {
                 Logger.printInfo("System event handler was interrupted.");
-                event = SystemEvent.TERMINATION;
+                interrupt();
             }
 
-            handlers.get(event).handle();
+            if (event != null) {
+                handlers.get(event).handle();
+            }
 
         }
     }
 
     /**
      * Registers the event handler for the specified event.
-     * @param event type of the event.
+     *
+     * @param event   type of the event.
      * @param handler what must be done.
      */
     public synchronized void registerSystemEventHandler(SystemEvent event, SystemEventHandler handler) {
@@ -48,6 +51,7 @@ public class SystemEventHandlingThread extends Thread {
     /**
      * Adds the event from the outside to the queue of events.
      * The event will be removed from the queue after handling.
+     *
      * @param event event for handling.
      */
     public void pushEvent(SystemEvent event) {

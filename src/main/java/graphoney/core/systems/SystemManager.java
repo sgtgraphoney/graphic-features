@@ -60,10 +60,18 @@ public class SystemManager {
     }
 
     /**
-     * Checks if termination of all terminated systems is finished.
-     * @return a boolean value that indicates whether termination is finished.
+     * Waits for shutdown of all systems that must be terminated.
      */
-    public boolean terminationFinished() {
+    public void waitForSystemsTermination() {
+        while (!terminationFinished()) {
+            terminatingSystems.get(0).waitForTermination();
+        }
+    }
+
+    /**
+     * Checks if termination of all terminated systems is finished.
+     */
+    private boolean terminationFinished() {
         terminatingSystems.removeIf(System::isTerminated);
         return terminatingSystems.isEmpty();
     }

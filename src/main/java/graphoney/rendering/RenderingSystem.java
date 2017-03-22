@@ -1,26 +1,28 @@
 package graphoney.rendering;
 
-import graphoney.core.systems.FrameAction;
 import graphoney.core.systems.System;
-import graphoney.utils.logging.Logger;
-
-import java.util.List;
 
 public class RenderingSystem extends System {
 
     private static final String NAME = "rendering";
-    private static final RenderingAction ACTION = new RenderingAction();
-
-    private static class RenderingAction implements FrameAction {
-        @Override
-        public void run() throws InterruptedException {
-            Logger.printInfo("Rendering...");
-            Thread.sleep(1000);
-        }
-    }
 
     public RenderingSystem() {
-        super(NAME, ACTION);
+        super(NAME);
+    }
+
+    @Override
+    protected void initialize() throws InterruptedException {
+        DisplayManager.createDisplay();
+    }
+
+    @Override
+    protected void run() throws InterruptedException {
+        DisplayManager.updateDisplay();
+    }
+
+    @Override
+    protected void destroy() throws InterruptedException {
+        DisplayManager.closeDisplay();
     }
 
     @Override
