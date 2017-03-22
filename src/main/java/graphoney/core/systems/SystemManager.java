@@ -4,10 +4,19 @@ import graphoney.utils.logging.Logger;
 
 import java.util.*;
 
+/**
+ * Represents the system manager.
+ * Launches and terminates all systems of engine.
+ * It can also transfer data to systems.
+ */
 public class SystemManager {
 
     private static final SystemManager INSTANCE = new SystemManager();
 
+    /**
+     * Returns the single instance of the system manager.
+     * @return the single instance of the system manager.
+     */
     public static SystemManager getInstance() {
         return INSTANCE;
     }
@@ -18,6 +27,10 @@ public class SystemManager {
     private Map<String, System> activeSystems = new HashMap<>();
     private List<System> terminatingSystems = new LinkedList<>();
 
+    /**
+     * Runs systems passed as parameters.
+     * @param systems systems that must be started.
+     */
     public void runSystems(System... systems) {
         for (System system : systems) {
             this.activeSystems.put(system.getName(), system);
@@ -25,6 +38,10 @@ public class SystemManager {
         }
     }
 
+    /**
+     * Terminates the specified system.
+     * @param name name of the system that must be terminated.
+     */
     public void terminateSystem(String name) {
         System system = activeSystems.get(name);
         system.terminate();
@@ -32,6 +49,9 @@ public class SystemManager {
         activeSystems.remove(name);
     }
 
+    /**
+     * Terminates all running systems.
+     */
     public void terminateAllSystems() {
         Logger.printInfo("Terminating all systems...");
         activeSystems.values().forEach(System::terminate);
@@ -39,11 +59,20 @@ public class SystemManager {
         activeSystems.clear();
     }
 
+    /**
+     * Checks if termination of all terminated systems is finished.
+     * @return a boolean value that indicates whether termination is finished.
+     */
     public boolean terminationFinished() {
         terminatingSystems.removeIf(System::isTerminated);
         return terminatingSystems.isEmpty();
     }
 
+    /**
+     * Transfers necessary data to the specified system.
+     * @param systemName name of the system.
+     * @param data data to transfer.
+     */
     public void transferDataToSystem(String systemName, Object data) {
         System system = activeSystems.get(systemName);
 
