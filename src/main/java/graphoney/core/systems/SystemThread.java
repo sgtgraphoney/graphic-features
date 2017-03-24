@@ -15,9 +15,9 @@ public class SystemThread extends Thread {
     private final ServiceAction initialization, finalization;
     private volatile boolean active;
     private volatile boolean interrupted;
+    private volatile int threadFps;
     private long lastFrameTime, lastFps;
     private double delta;
-    private int threadFps;
 
     /**
      * Constructs a new thread for functional system of engine.
@@ -55,6 +55,7 @@ public class SystemThread extends Thread {
         try {
 
             initialization.service();
+            initTimeParams();
 
             while (!interrupted) {
 
@@ -106,7 +107,7 @@ public class SystemThread extends Thread {
      * Returns the FPS value of the thread.
      * FPS shows how many times the main action of the thread performs.
      *
-     * @return FPS.
+     * @return FPS value of the thread.
      */
     public int getThreadFps() {
         return threadFps;
@@ -120,12 +121,15 @@ public class SystemThread extends Thread {
 
     private static final int MILLIS_IN_SECOND = 1000;
 
+    private void initTimeParams() {
+        lastFrameTime = lastFps = getCurrentTime();
+    }
+
     private void updateDeltaAndFps() {
         long currentFrameTime = getCurrentTime();
         delta = (double) (currentFrameTime - lastFrameTime) / MILLIS_IN_SECOND;
 
         if (currentFrameTime - lastFps > MILLIS_IN_SECOND) {
-            Display.setTitle("FPS: " + threadFps);
             threadFps = 0;
             lastFps += MILLIS_IN_SECOND;
         }
