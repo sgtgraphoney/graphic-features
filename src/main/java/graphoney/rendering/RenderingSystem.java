@@ -1,6 +1,7 @@
 package graphoney.rendering;
 
 import graphoney.core.systems.System;
+import org.lwjgl.opengl.Display;
 
 public class RenderingSystem extends System {
 
@@ -16,8 +17,14 @@ public class RenderingSystem extends System {
     }
 
     @Override
-    protected void run() throws InterruptedException {
+    protected void run(double delta) throws InterruptedException {
+
+        if (Display.isCloseRequested()) {
+            throw new InterruptedException();
+        }
+
         DisplayManager.updateDisplay();
+
     }
 
     @Override

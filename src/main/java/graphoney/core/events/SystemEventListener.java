@@ -55,7 +55,7 @@ public class SystemEventListener {
             eventHandlingThread.interrupt();
             eventHandlingThread.join();
         } catch (InterruptedException e) {
-            Logger.printError("System event listener was interrupted.");
+            Logger.printError("System event listener is interrupted.");
         }
     }
 

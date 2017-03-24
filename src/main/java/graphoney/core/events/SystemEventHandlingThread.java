@@ -21,13 +21,15 @@ public class SystemEventHandlingThread extends Thread {
      */
     @Override
     public void run() {
+        Logger.printInfo("System event handler started.");
+
         while (!isInterrupted()) {
 
             SystemEvent event = null;
             try {
                 event = eventQueue.take();
             } catch (InterruptedException e) {
-                Logger.printInfo("System event handler was interrupted.");
+                Logger.printInfo("System event handler is interrupted.");
                 interrupt();
             }
 
@@ -36,6 +38,8 @@ public class SystemEventHandlingThread extends Thread {
             }
 
         }
+
+        Logger.printInfo("System event handler is stopped.");
     }
 
     /**

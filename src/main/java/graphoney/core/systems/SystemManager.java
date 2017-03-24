@@ -15,6 +15,7 @@ public class SystemManager {
 
     /**
      * Returns the single instance of the system manager.
+     *
      * @return the single instance of the system manager.
      */
     public static SystemManager getInstance() {
@@ -29,6 +30,7 @@ public class SystemManager {
 
     /**
      * Runs systems passed as parameters.
+     *
      * @param systems systems that must be started.
      */
     public void runSystems(System... systems) {
@@ -40,6 +42,7 @@ public class SystemManager {
 
     /**
      * Terminates the specified system.
+     *
      * @param name name of the system that must be terminated.
      */
     public void terminateSystem(String name) {
@@ -78,8 +81,9 @@ public class SystemManager {
 
     /**
      * Transfers necessary data to the specified system.
+     *
      * @param systemName name of the system.
-     * @param data data to transfer.
+     * @param data       data to transfer.
      */
     public void transferDataToSystem(String systemName, Object data) {
         System system = activeSystems.get(systemName);

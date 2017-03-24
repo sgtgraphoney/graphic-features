@@ -1,6 +1,8 @@
 package graphoney.core.systems;
 
 import graphoney.utils.logging.Logger;
+import org.lwjgl.Sys;
+import org.lwjgl.opengl.Display;
 
 import java.lang.*;
 
@@ -9,18 +11,22 @@ import java.lang.*;
  */
 public class SystemThread extends Thread {
 
-    private Action initialization, target, finalization;
-    private boolean active;
-    private boolean interrupted;
+    private final LoopAction target;
+    private final ServiceAction initialization, finalization;
+    private volatile boolean active;
+    private volatile boolean interrupted;
+    private long lastFrameTime, lastFps;
+    private double delta;
+    private int threadFps;
 
     /**
      * Constructs a new thread for functional system of engine.
      *
-     * @param initialization the action that must be performed for initialization of the system.
      * @param target         the action that must be performed cyclically on each frame.
+     * @param initialization the action that must be performed for initialization of the system.
      * @param finalization   the action that must be performed for finalization of the system.
      */
-    public SystemThread(Action initialization, Action target, Action finalization) {
+    public SystemThread(LoopAction target, ServiceAction initialization, ServiceAction finalization) {
         this.initialization = initialization;
         this.target = target;
         this.finalization = finalization;
@@ -48,25 +54,33 @@ public class SystemThread extends Thread {
 
         try {
 
-            initialization.perform();
+            initialization.service();
 
             while (!interrupted) {
+
+                updateDeltaAndFps();
+
                 if (active) {
-                    target.perform();
+                    target.perform(delta);
                 }
+
             }
 
         } catch (InterruptedException e) {
-            Logger.printInfo("System thread was interrupted.");
-        }
 
-        try {
-            finalization.perform();
-        } catch (InterruptedException e) {
-            Logger.printError("Finalizing of the system thread was interrupted.");
-        }
+            Logger.printInfo("System thread is interrupted.");
 
-        Logger.printInfo("System terminated.");
+        } finally {
+
+            try {
+                finalization.service();
+            } catch (InterruptedException e) {
+                Logger.printError("Finalizing of the system thread is interrupted.");
+            }
+
+            Logger.printInfo("System is stopped.");
+
+        }
 
     }
 
@@ -88,9 +102,40 @@ public class SystemThread extends Thread {
         this.active = active;
     }
 
+    /**
+     * Returns the FPS value of the thread.
+     * FPS shows how many times the main action of the thread performs.
+     *
+     * @return FPS.
+     */
+    public int getThreadFps() {
+        return threadFps;
+    }
+
     @Override
     public void interrupt() {
         interrupted = true;
         super.interrupt();
     }
+
+    private static final int MILLIS_IN_SECOND = 1000;
+
+    private void updateDeltaAndFps() {
+        long currentFrameTime = getCurrentTime();
+        delta = (double) (currentFrameTime - lastFrameTime) / MILLIS_IN_SECOND;
+
+        if (currentFrameTime - lastFps > MILLIS_IN_SECOND) {
+            Display.setTitle("FPS: " + threadFps);
+            threadFps = 0;
+            lastFps += MILLIS_IN_SECOND;
+        }
+        threadFps++;
+
+        lastFrameTime = currentFrameTime;
+    }
+
+    private static long getCurrentTime() {
+        return Sys.getTime() * 1000 / Sys.getTimerResolution();
+    }
+
 }

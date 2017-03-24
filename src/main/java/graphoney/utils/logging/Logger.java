@@ -1,12 +1,14 @@
 package graphoney.utils.logging;
 
 import java.io.*;
+import java.util.Calendar;
 
 public class Logger {
 
     private static final String LOG_PATH;
 
     private static PrintStream out;
+    private static boolean logDate;
 
     static {
         String fileSeparator = System.getProperty("file.separator");
@@ -27,20 +29,41 @@ public class Logger {
     }
 
     public static void printInfo(String message) {
-        out.println(message);
+        String prefix;
+        if (logDate) {
+            prefix = getDateString() + ": ";
+        } else {
+            prefix = "";
+        }
+        out.println(prefix + message);
     }
 
     public static void printError(String message) {
-        out.println("ERROR: " + message);
+        String prefix = "ERROR: ";
+        if (logDate) {
+            prefix += getDateString() + ": ";
+        }
+        out.println(prefix + message);
+    }
+
+    public static void close() {
+        out.flush();
+        out.close();
     }
 
     public static String getLogPath() {
         return LOG_PATH;
     }
 
-    public static void close() {
-        out.flush();
-        out.close();
+    public static void setLogDate(boolean logDate) {
+        Logger.logDate = logDate;
+    }
+
+    private static String getDateString() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.DATE) + "." + (calendar.get(Calendar.MONTH) + 1) + "."
+                + calendar.get(Calendar.YEAR) +  " " + calendar.get(Calendar.HOUR_OF_DAY) + ":"
+                + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND);
     }
 
 }

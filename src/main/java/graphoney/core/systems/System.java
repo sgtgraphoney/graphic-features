@@ -18,7 +18,7 @@ public abstract class System {
      */
     public System(String name) {
         this.name = name;
-        thread = new SystemThread(this::initialize, this::run, this::destroy);
+        thread = new SystemThread(this::run, this::initialize, this::destroy);
     }
 
     /**
@@ -31,9 +31,10 @@ public abstract class System {
     /**
      * The main action that is performed cyclically on each frame.
      *
+     * @param delta the time elapsed since the previous action.
      * @throws InterruptedException if interrupted while waiting.
      */
-    protected abstract void run() throws InterruptedException;
+    protected abstract void run(double delta) throws InterruptedException;
 
     /**
      * Destroys the system.
@@ -110,7 +111,7 @@ public abstract class System {
         try {
             thread.join();
         } catch (InterruptedException e) {
-            Logger.printError("Waiting for termination of system '" + name + "' interrupted.");
+            Logger.printError("Waiting for termination of system '" + name + "' is interrupted.");
         }
     }
 
