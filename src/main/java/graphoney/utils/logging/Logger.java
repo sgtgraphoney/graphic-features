@@ -8,7 +8,8 @@ public class Logger {
     private static final String LOG_PATH;
 
     private static PrintStream out;
-    private static boolean logDate;
+
+    private static LoggingLevel currentLevel = LoggingLevel.DEBUG;
 
     static {
         String fileSeparator = System.getProperty("file.separator");
@@ -28,42 +29,27 @@ public class Logger {
         }
     }
 
-    public static void printInfo(String message) {
-        String prefix;
-        if (logDate) {
-            prefix = getDateString() + ": ";
-        } else {
-            prefix = "";
-        }
-        out.println(prefix + message);
+    public static void setLoggingLevel(LoggingLevel level) {
+        currentLevel = level;
     }
 
-    public static void printError(String message) {
-        String prefix = "ERROR: ";
-        if (logDate) {
-            prefix += getDateString() + ": ";
+    public static void log(LoggingLevel level, String message) {
+        if (level.getLevel() >= currentLevel.getLevel()) {
+            out.println(level.getPrefix() + message);
         }
-        out.println(prefix + message);
     }
 
     public static void close() {
-        out.flush();
-        out.close();
+        if (out != null) {
+            out.flush();
+            out.close();
+            out = null;
+        }
     }
 
-    public static String getLogPath() {
-        return LOG_PATH;
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        close();
     }
-
-    public static void setLogDate(boolean logDate) {
-        Logger.logDate = logDate;
-    }
-
-    private static String getDateString() {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.DATE) + "." + (calendar.get(Calendar.MONTH) + 1) + "."
-                + calendar.get(Calendar.YEAR) +  " " + calendar.get(Calendar.HOUR_OF_DAY) + ":"
-                + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND);
-    }
-
 }

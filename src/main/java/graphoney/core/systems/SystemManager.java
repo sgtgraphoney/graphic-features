@@ -11,14 +11,11 @@ public class SystemManager {
         return INSTANCE;
     }
 
-    private final SystemLoader loader = new SystemLoader();
     private final Map<String, System> systems = new HashMap<>();
 
     private SystemManager() {
+        SystemLoader loader = new SystemLoader();
         systems.putAll(loader.loadSystems());
-        for (String s : systems.keySet()) {
-            java.lang.System.out.println(s);
-        }
     }
 
 

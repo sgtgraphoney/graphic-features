@@ -17,7 +17,6 @@ public class DisplayManager {
      * Parameters should be specified with setters of this class.
      */
     public static void createDisplay() {
-        Logger.printInfo("Creating display...");
 
         ContextAttribs attribs = new ContextAttribs(3, 2);
         attribs.withForwardCompatible(true);
@@ -29,12 +28,11 @@ public class DisplayManager {
             Display.setTitle("Look at me");
             GL11.glEnable(GL13.GL_MULTISAMPLE);
         } catch (LWJGLException e) {
-            Logger.printError("Could not create the display.");
+            e.printStackTrace();
         }
 
         GL11.glViewport(0, 0, displayWidth, displayHeight);
 
-        Logger.printInfo("Display was created.");
     }
 
     /**
@@ -50,9 +48,7 @@ public class DisplayManager {
      * Closes the display.
      */
     public static void closeDisplay() {
-        Logger.printInfo("Closing display...");
         Display.destroy();
-        Logger.printInfo("Display has been closed.");
     }
 
     /**

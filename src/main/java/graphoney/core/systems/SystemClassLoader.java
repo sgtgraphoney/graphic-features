@@ -1,5 +1,8 @@
 package graphoney.core.systems;
 
+import graphoney.utils.logging.Logger;
+import graphoney.utils.logging.LoggingLevel;
+
 import java.io.*;
 
 public class SystemClassLoader extends ClassLoader {
@@ -21,13 +24,16 @@ public class SystemClassLoader extends ClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
+        String path = systemClassPath + name + ".class";
+
         try {
 
-            byte[] bytecode = readBytecode(systemClassPath + name + ".class");
+            byte[] bytecode = readBytecode(path);
             return defineClass(name, bytecode, 0, bytecode.length);
 
         } catch (IOException e) {
 
+            Logger.log(LoggingLevel.ERROR, "Could not load system from " + path + ".");
             return super.findClass(name);
 
         }
