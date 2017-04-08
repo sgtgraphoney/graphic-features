@@ -7,24 +7,24 @@ import java.io.*;
 
 public class SystemClassLoader extends ClassLoader {
 
-    private String systemClassPath;
+    private String systemClasspath;
 
-    public SystemClassLoader(String systemClassPath, ClassLoader parent) {
+    public SystemClassLoader(String systemClasspath, ClassLoader parent) {
         super(parent);
-        this.systemClassPath = systemClassPath;
+        this.systemClasspath = systemClasspath;
     }
 
-    public void setSystemClassPath(String path) {
-        systemClassPath = path;
+    public void setSystemClasspath(String path) {
+        systemClasspath = path;
     }
 
-    public String getSystemClassPath() {
-        return systemClassPath;
+    public String getSystemClasspath() {
+        return systemClasspath;
     }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        String path = systemClassPath + name + ".class";
+        String path = systemClasspath + name + ".class";
 
         try {
 

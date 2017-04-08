@@ -1,22 +1,26 @@
 package graphoney.core.systems;
 
+import graphoney.core.environment.EnvironmentManager;
+import graphoney.core.environment.EnvironmentVariableException;
 import graphoney.utils.logging.Logger;
 import graphoney.utils.logging.LoggingLevel;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SystemLoader {
 
-    private static final String DEFAULT_SYSTEM_CLASS_PATH = "target/classes/";
-
     private SystemClassLoader classLoader;
 
-    public SystemLoader() {
-        classLoader = new SystemClassLoader(DEFAULT_SYSTEM_CLASS_PATH, ClassLoader.getSystemClassLoader());
+    public SystemLoader() throws InstantiationException {
+        try {
+            String classpath = (String) EnvironmentManager.getInstance().getVariable("SYSTEM_CLASSPATH");
+            classLoader = new SystemClassLoader(classpath, ClassLoader.getSystemClassLoader());
+        } catch (EnvironmentVariableException e) {
+            throw new InstantiationException();
+        }
     }
 
     public Map<String, System> loadSystems() {
@@ -24,7 +28,7 @@ public class SystemLoader {
 
         Map<String, System> systems = new HashMap<>();
 
-        File directory = new File(classLoader.getSystemClassPath());
+        File directory = new File(classLoader.getSystemClasspath());
         String[] files = directory.list();
 
         if (files == null) {
@@ -61,14 +65,6 @@ public class SystemLoader {
         boolean implementsSystem = Arrays.stream(systemClass.getInterfaces()).anyMatch(x -> x.equals(System.class));
         boolean annotated = systemClass.isAnnotationPresent(RegisterSystem.class);
         return implementsSystem && annotated;
-    }
-
-    public void setSystemClassPath(String path) throws IOException {
-        File directory = new File(path);
-        if (!directory.isDirectory()) {
-            throw new IOException("Incorrect directory path.");
-        }
-        classLoader.setSystemClassPath(path);
     }
 
 }

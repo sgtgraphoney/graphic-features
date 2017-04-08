@@ -1,5 +1,8 @@
 package graphoney.core.systems;
 
+import graphoney.utils.logging.Logger;
+import graphoney.utils.logging.LoggingLevel;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +17,12 @@ public class SystemManager {
     private final Map<String, System> systems = new HashMap<>();
 
     private SystemManager() {
-        SystemLoader loader = new SystemLoader();
-        systems.putAll(loader.loadSystems());
+        try {
+            SystemLoader loader = new SystemLoader();
+            systems.putAll(loader.loadSystems());
+        } catch (InstantiationException e){
+            Logger.log(LoggingLevel.ERROR, "Could not load systems.");
+        }
     }
 
 
