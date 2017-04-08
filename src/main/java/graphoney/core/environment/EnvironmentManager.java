@@ -17,7 +17,7 @@ public class EnvironmentManager {
     private final Map<String, Object> variables = new HashMap<>();
 
     private EnvironmentManager() {
-        setVariable("SYSTEM_CLASSPATH", "target/classes/");
+        setVariable("SYSTEM_CLASSPATH", "taarget/classes/");
         setVariable("ABRAKADABRA", "LOL");
     }
 
@@ -28,8 +28,7 @@ public class EnvironmentManager {
     public Object getVariable(String name) throws EnvironmentVariableException {
         Object var = variables.get(name);
         if (var == null) {
-            Logger.log(LoggingLevel.ERROR, "There is no variable with name '" + name + "'.");
-            throw new EnvironmentVariableException();
+            throw new EnvironmentVariableException("There is no variable with name '" + name + "'.");
         }
         return var;
     }

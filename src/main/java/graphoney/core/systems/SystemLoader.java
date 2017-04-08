@@ -6,6 +6,7 @@ import graphoney.utils.logging.Logger;
 import graphoney.utils.logging.LoggingLevel;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,25 +15,20 @@ public class SystemLoader {
 
     private SystemClassLoader classLoader;
 
-    public SystemLoader() throws InstantiationException {
-        try {
-            String classpath = (String) EnvironmentManager.getInstance().getVariable("SYSTEM_CLASSPATH");
-            classLoader = new SystemClassLoader(classpath, ClassLoader.getSystemClassLoader());
-        } catch (EnvironmentVariableException e) {
-            throw new InstantiationException();
-        }
-    }
-
-    public Map<String, System> loadSystems() {
+    public Map<String, System> loadSystems() throws EnvironmentVariableException {
         Logger.log(LoggingLevel.INFO, "Loading systems...");
+
+        if (classLoader == null) {
+            classLoader = new SystemClassLoader(ClassLoader.getSystemClassLoader());
+        }
 
         Map<String, System> systems = new HashMap<>();
 
-        File directory = new File(classLoader.getSystemClasspath());
+        File directory = new File((String) EnvironmentManager.getInstance().getVariable("SYSTEM_CLASSPATH"));
         String[] files = directory.list();
 
         if (files == null) {
-            return systems;
+            throw new EnvironmentVariableException("Incorrect classpath.");
         }
 
         for (String file : files) {

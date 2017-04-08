@@ -1,5 +1,7 @@
 package graphoney.core.systems;
 
+import graphoney.core.environment.EnvironmentManager;
+import graphoney.core.environment.EnvironmentVariableException;
 import graphoney.utils.logging.Logger;
 import graphoney.utils.logging.LoggingLevel;
 
@@ -9,17 +11,13 @@ public class SystemClassLoader extends ClassLoader {
 
     private String systemClasspath;
 
-    public SystemClassLoader(String systemClasspath, ClassLoader parent) {
+    public SystemClassLoader(ClassLoader parent) throws EnvironmentVariableException {
         super(parent);
-        this.systemClasspath = systemClasspath;
+        this.systemClasspath = (String) EnvironmentManager.getInstance().getVariable("SYSTEM_CLASSPATH");
     }
 
     public void setSystemClasspath(String path) {
         systemClasspath = path;
-    }
-
-    public String getSystemClasspath() {
-        return systemClasspath;
     }
 
     @Override
