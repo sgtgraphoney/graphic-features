@@ -5,8 +5,6 @@ import graphoney.core.environment.EnvironmentVariableException;
 import graphoney.utils.logging.Logger;
 import graphoney.utils.logging.LoggingLevel;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.*;
 
 public class TaskManager {
@@ -23,12 +21,12 @@ public class TaskManager {
     private final ThreadPoolExecutor threadPool;
 
     private TaskManager() {
-        int threadsCount = getThreadsCount();
+        int threadsCount = loadThreadsCount();
         threadPool = new ThreadPoolExecutor(threadsCount, threadsCount, 0, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>());
     }
 
-    public void executeTasks() throws InterruptedException, ExecutionException {
+    public void execute() throws InterruptedException, ExecutionException {
         threadPool.invokeAll(taskScheduler.getPreparedTasks());
 
         while (threadPool.getActiveCount() > 0) {
@@ -41,7 +39,7 @@ public class TaskManager {
         threadPool.shutdown();
     }
 
-    private int getThreadsCount() {
+    private int loadThreadsCount() {
         try {
             return (int) EnvironmentManager.getInstance().getVariable("THREADS_NUMBER");
         } catch (EnvironmentVariableException e) {

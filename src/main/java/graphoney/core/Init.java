@@ -9,7 +9,7 @@ public class Init {
     public static void main(String[] args) {
 
         try {
-            TaskManager.getInstance().executeTasks();
+            TaskManager.getInstance().execute();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }

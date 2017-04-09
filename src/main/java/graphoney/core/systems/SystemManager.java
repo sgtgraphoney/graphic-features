@@ -4,7 +4,9 @@ import graphoney.core.environment.EnvironmentVariableException;
 import graphoney.utils.logging.Logger;
 import graphoney.utils.logging.LoggingLevel;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SystemManager {
@@ -18,12 +20,20 @@ public class SystemManager {
     private final Map<String, System> systems = new HashMap<>();
 
     private SystemManager() {
+        loadSystems();
+    }
+
+    private void loadSystems() {
         SystemLoader loader = new SystemLoader();
         try {
             systems.putAll(loader.loadSystems());
         } catch (EnvironmentVariableException e){
             Logger.log(LoggingLevel.ERROR, "Failed to load systems. " + e.getMessage());
         }
+    }
+
+    public Map<String, System> getSystems() {
+        return systems;
     }
 
 

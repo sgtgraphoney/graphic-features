@@ -1,5 +1,7 @@
 package graphoney.core.systems;
 
+import graphoney.core.communication.CommunicationManager;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -9,12 +11,8 @@ public interface System {
 
     void terminate();
 
-    boolean isTaskSplitSupported();
+    List<Callable<Boolean>> getTasks();
 
-    List<Callable<Boolean>> getSplittedTask(int subtaskCount);
-
-    Callable<Boolean> getFullTask();
-
-    boolean isReady();
+    List<String> getSuppliersNames();
 
 }
