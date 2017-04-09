@@ -2,11 +2,9 @@ package graphoney.core.systems;
 
 import graphoney.core.environment.EnvironmentVariableException;
 import graphoney.utils.logging.Logger;
-import graphoney.utils.logging.LoggingLevel;
+import graphoney.utils.logging.LoggingTarget;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SystemManager {
@@ -28,7 +26,7 @@ public class SystemManager {
         try {
             systems.putAll(loader.loadSystems());
         } catch (EnvironmentVariableException e){
-            Logger.log(LoggingLevel.ERROR, "Failed to load systems. " + e.getMessage());
+            Logger.log(LoggingTarget.ERROR, "Failed to load systems. " + e.getMessage());
         }
     }
 

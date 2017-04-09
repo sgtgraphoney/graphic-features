@@ -3,7 +3,7 @@ package graphoney.core.tasks;
 import graphoney.core.environment.EnvironmentManager;
 import graphoney.core.environment.EnvironmentVariableException;
 import graphoney.utils.logging.Logger;
-import graphoney.utils.logging.LoggingLevel;
+import graphoney.utils.logging.LoggingTarget;
 
 import java.util.concurrent.*;
 
@@ -43,7 +43,7 @@ public class TaskManager {
         try {
             return (int) EnvironmentManager.getInstance().getVariable("THREADS_NUMBER");
         } catch (EnvironmentVariableException e) {
-            Logger.log(LoggingLevel.ERROR, e.getMessage() + " Creating " + DEFAULT_THREADS_NUMBER
+            Logger.log(LoggingTarget.ERROR, e.getMessage() + " Creating " + DEFAULT_THREADS_NUMBER
                     + " threads in pool.");
             return DEFAULT_THREADS_NUMBER;
         }

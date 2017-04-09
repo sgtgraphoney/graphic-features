@@ -1,8 +1,5 @@
 package graphoney.core.environment;
 
-import graphoney.utils.logging.Logger;
-import graphoney.utils.logging.LoggingLevel;
-
 import java.util.HashMap;
 import java.util.Map;
 

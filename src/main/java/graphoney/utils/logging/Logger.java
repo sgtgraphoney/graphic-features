@@ -1,7 +1,6 @@
 package graphoney.utils.logging;
 
 import java.io.*;
-import java.util.Calendar;
 
 public class Logger {
 
@@ -9,7 +8,7 @@ public class Logger {
 
     private static PrintStream out;
 
-    private static LoggingLevel currentLevel = LoggingLevel.DEBUG;
+    private static LoggingTarget currentLevel = LoggingTarget.DEBUG;
 
     static {
         String fileSeparator = System.getProperty("file.separator");
@@ -29,11 +28,11 @@ public class Logger {
         }
     }
 
-    public static void setLoggingLevel(LoggingLevel level) {
+    public static void setLoggingLevel(LoggingTarget level) {
         currentLevel = level;
     }
 
-    public static void log(LoggingLevel level, String message) {
+    public static void log(LoggingTarget level, String message) {
         if (level.getLevel() >= currentLevel.getLevel()) {
             out.println(level.getPrefix() + message);
         }

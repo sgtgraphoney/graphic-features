@@ -3,7 +3,7 @@ package graphoney.core.systems;
 import graphoney.core.environment.EnvironmentManager;
 import graphoney.core.environment.EnvironmentVariableException;
 import graphoney.utils.logging.Logger;
-import graphoney.utils.logging.LoggingLevel;
+import graphoney.utils.logging.LoggingTarget;
 
 import java.io.*;
 
@@ -31,7 +31,7 @@ public class SystemClassLoader extends ClassLoader {
 
         } catch (IOException e) {
 
-            Logger.log(LoggingLevel.ERROR, "Could not load system from " + path + ".");
+            Logger.log(LoggingTarget.ERROR, "Could not load system from " + path + ".");
             return super.findClass(name);
 
         }

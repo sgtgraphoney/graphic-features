@@ -1,6 +1,6 @@
 package graphoney.utils.logging;
 
-public enum LoggingLevel {
+public enum LoggingTarget {
     DEBUG(1, "DEBUG: "),
     INFO(2, ""),
     WARNING(3, "WARNING: "),
@@ -9,7 +9,7 @@ public enum LoggingLevel {
     private int level;
     private String prefix;
 
-    LoggingLevel(int level, String prefix) {
+    LoggingTarget(int level, String prefix) {
         this.level = level;
         this.prefix = prefix;
     }

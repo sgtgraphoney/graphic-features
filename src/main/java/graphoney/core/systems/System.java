@@ -14,5 +14,5 @@ public interface System {
     List<Callable<Boolean>> getTasks();
 
     List<String> getSuppliersNames();
-
+    
 }

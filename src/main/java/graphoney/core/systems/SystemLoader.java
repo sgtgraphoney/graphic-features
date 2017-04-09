@@ -3,10 +3,9 @@ package graphoney.core.systems;
 import graphoney.core.environment.EnvironmentManager;
 import graphoney.core.environment.EnvironmentVariableException;
 import graphoney.utils.logging.Logger;
-import graphoney.utils.logging.LoggingLevel;
+import graphoney.utils.logging.LoggingTarget;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +15,7 @@ public class SystemLoader {
     private SystemClassLoader classLoader;
 
     public Map<String, System> loadSystems() throws EnvironmentVariableException {
-        Logger.log(LoggingLevel.INFO, "Loading systems...");
+        Logger.log(LoggingTarget.INFO, "Loading systems...");
 
         if (classLoader == null) {
             classLoader = new SystemClassLoader(ClassLoader.getSystemClassLoader());
@@ -47,13 +46,13 @@ public class SystemLoader {
                     }
 
                 } catch (ReflectiveOperationException e) {
-                    Logger.log(LoggingLevel.ERROR, "Could not instantiate system class " + classname + ".");
+                    Logger.log(LoggingTarget.ERROR, "Could not instantiate system class " + classname + ".");
                 }
 
             }
         }
 
-        Logger.log(LoggingLevel.INFO, "All systems loaded.");
+        Logger.log(LoggingTarget.INFO, "All systems loaded.");
         return systems;
     }
 
