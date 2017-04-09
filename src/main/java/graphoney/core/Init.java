@@ -1,12 +1,18 @@
 package graphoney.core;
 
-import graphoney.core.systems.SystemManager;
+import graphoney.core.tasks.TaskManager;
+
+import java.util.concurrent.ExecutionException;
 
 public class Init {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
-        SystemManager manager = SystemManager.getInstance();
+        try {
+            TaskManager.getInstance().executeTasks();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
 
     }
 
